@@ -23,6 +23,7 @@ set(HTTPFS2_USE_AUTH 1 CACHE BOOL "Enable md5 auth")
 set(HTTPFS2_USE_SSL ${GNUTLS_FOUND} CACHE BOOL "Enable SSL")
 set(HTTPFS2_USE_THREADS ${CMAKE_HAVE_PTHREAD_H} CACHE BOOL "Enable threading")
 
+
 set(HTTPFS2_CERT_STORE "/etc/ssl/certs/ca-certificates.crt" CACHE STRING "Root CA certificates")
 set(HTTPFS2_TIMEOUT 30 CACHE NUMBER "HTTP timeout")
 set(HTTPFS2_CONSOLE "/dev/console" CACHE string "Console device")
