@@ -15,11 +15,8 @@ FIND_PACKAGE(fuse REQUIRED)
 FIND_PACKAGE(GnuTLS REQUIRED)
 FIND_PACKAGE(Threads)
 #FIND_PACKAGE(CURL)
-if(GNUTLS_FOUND)
-	set(USE_SSL ON CACHE BOOL "Enable SSL")
-endif()
 
-set(HTTPFS2_USE_AUTH 1 CACHE BOOL "Enable md5 auth")
+set(HTTPFS2_USE_AUTH ON CACHE BOOL "Enable md5 auth")
 set(HTTPFS2_USE_SSL ${GNUTLS_FOUND} CACHE BOOL "Enable SSL")
 set(HTTPFS2_USE_THREADS ${CMAKE_HAVE_PTHREAD_H} CACHE BOOL "Enable threading")
 
@@ -33,14 +30,12 @@ set(HTTPFS2_MAX_REDIRECTS 32 CACHE NUMBER "Max redirects")
 set(HTTPFS2_TNAME_LEN 13 CACHE NUMBER "TNAME_LEN")
 set(HTTPFS2_RESET_RETRIES 8 CACHE NUMBER "RESET_RETRIES")
 
-#define VERSION "0.1.5 \"The Message\""
-
-
 configure_file(${CMAKE_SOURCE_DIR}/cmake/config.h.in ${CMAKE_SOURCE_DIR}/config.h)
 
 include_directories(${PACKAGE_NAME} ${OpenCL_INCLUDE_DIR} ${FUSE_INCLUDE_DIRS} ${CURL_INCLUDE_DIRS} ${GNUTLS_INCLUDE_DIR})
-file(GLOB sources "${CMAKE_SOURCE_DIR}/*.[ch]" "${CMAKE_SOURCE_DIR}/*.[ch]pp")
+file(GLOB sources "${CMAKE_SOURCE_DIR}/src/*.[ch]" "${CMAKE_SOURCE_DIR}/src/*.[ch]pp")
 
 add_executable(${PACKAGE_NAME} ${sources})
-target_compile_options(${PACKAGE_NAME} PRIVATE ${PC_FUSE_CFLAGS})
-target_link_libraries(${PACKAGE_NAME} PRIVATE ${FUSE_LIBRARIES} ${GNUTLS_LIBRARY} ${CURL_LIBRARIES})
+target_compile_options(${PACKAGE_NAME} PRIVATE ${PC_FUSE_CFLAGS} -lpthread -lrt -lm)
+target_link_libraries(${PACKAGE_NAME} PRIVATE -lpthread -lrt -lm ${FUSE_LIBRARIES} ${GNUTLS_LIBRARY} ${CURL_LIBRARIES})
+set_property(TARGET ${PACKAGE_NAME} PROPERTY CXX_STANDARD 14)
